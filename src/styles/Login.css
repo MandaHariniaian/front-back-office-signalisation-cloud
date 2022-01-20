@@ -1,0 +1,38 @@
+.login{
+    margin-top: 20vh;
+    background-color: #eee;
+}
+
+.messageErreur{
+    color: red;
+}
+
+.formComponent{
+    margin: 1%
+}
+
+.container-titre{
+    margin-top: 10vh;
+    background-image: url('../assets/images/login/titre_background.jpg');
+    background-size: cover;
+    height: 30vh;
+    background-repeat: no-repeat;
+}
+
+.titre{
+    text-align: center;
+    margin-top: 10vh;
+}
+
+.formulaire{
+    margin-top: 5vh;
+}
+
+button{
+    width: 100%;
+}
+
+label{
+    text-align: center;
+    font-size: x-large;
+}

@@ -1,0 +1,23 @@
+.row{
+    margin-top: 4vh;
+}
+
+.liste_regions{
+    border-left: 1px solid black;
+}
+
+.nom_region_ajout{
+    margin: 1vh;
+}
+
+.btn-modification{
+    margin-left: 2vw;
+}
+
+.form_ajout_region{
+    background-color: #eee;
+    border-right: 1px solid black;
+    padding-top: 2vh;
+    padding-right: 2vw;
+    padding-bottom: 2vh;
+}
