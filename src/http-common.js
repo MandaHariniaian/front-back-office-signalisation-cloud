@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: "https://rest-api-signalisation-cloud.herokuapp.com",
+    baseURL: "http://localhost:9090",
     headers: {
         "Content-type": "application/json" 
     }

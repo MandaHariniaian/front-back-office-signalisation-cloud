@@ -35,7 +35,7 @@ export default function GestionTypeSignalisation() {
 
 function ListeTypeSignalisation(props) {
 
-    if (props.listeTypeSignalisations === null) {
+    if (props.listeTypeSignalisations.length === 0) {
         return (
             <Table striped bordered hover>
                 <thead>
@@ -79,6 +79,8 @@ function ListeTypeSignalisation(props) {
 function TypeSignalisation(props) {
     const typeSignalisation = props.typeSignalisation;
     const [nomTypeSignalisation, setTypeSignalisation] = useState('');
+    const [chargementModification, setChargementModification] = useState(false);
+    const [chargementSuppression, setChargementSuppression] = useState(false);
 
 
     async function modifierTypeSignalisation() {
@@ -91,6 +93,7 @@ function TypeSignalisation(props) {
             }
             await typeSignalisationService.update(typeSignalisation.idTypeSignalisation, data)
                 .then(response => {
+                    setChargementModification(true);
                     props.listeTypeSignalisations.map(s => {
                         if (typeSignalisation.idTypeSignalisation === s.idTypeSignalisation) {
                             s.typeSignalisation = nomTypeSignalisation;
@@ -102,11 +105,13 @@ function TypeSignalisation(props) {
         catch (ex) {
             alert(ex);
         }
+        setChargementModification(false);
     }
 
     async function supprimerTypeSignalisation() {
         try {
             await typeSignalisationService.delete(typeSignalisation.idTypeSignalisation).then(() => {
+                setChargementSuppression(true);
                 let compteur = 0;
                 props.listeTypeSignalisations.forEach(s => {
                     if (s.idTypeSignalisation === typeSignalisation.idTypeSignalisation) {
@@ -123,8 +128,27 @@ function TypeSignalisation(props) {
         catch (ex) {
             alert(ex);
         }
+        setChargementSuppression(false);
     }
 
+    if(chargementModification){
+        return(
+            <tr >
+            <td>{typeSignalisation.typeSignalisation}</td>
+            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border"  /></>} disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+        </tr>
+        )
+    }
+    else if(chargementSuppression){
+        return(
+            <tr >
+            <td>{typeSignalisation.typeSignalisation}</td>
+            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value="modifier" disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+        </tr>
+        )
+    }
     return (
         <tr >
             <td>{typeSignalisation.typeSignalisation}</td>

@@ -35,7 +35,7 @@ export default function GestionRegion() {
 
 function ListeRegions(props) {
 
-    if (props.listeRegions === null) {
+    if (props.listeRegions.length === 0) {
         return (
             <Table striped bordered hover>
                 <thead>
@@ -80,7 +80,7 @@ function Region(props) {
     const region = props.region;
     const [nomRegion, setNomRegion] = useState('');
     const [chargementModification, setChargementModification] = useState(false);
-    const [chargemenSuppression, setChargementSuppression] = useState(false);
+    const [chargementSuppression, setChargementSuppression] = useState(false);
 
     async function modifierRegion() {
         try {
@@ -91,9 +91,9 @@ function Region(props) {
                 idRegion: props.region.idRegion,
                 nomRegion: nomRegion
             }
-            setChargementModification(true);
             await regionService.update(props.region.idRegion, data)
-                .then(response => {
+            .then(response => {
+                    setChargementModification(true);
                     props.listeRegions.map(r => {
                         if (region.idRegion === r.idRegion) {
                             r.nomRegion = nomRegion;
@@ -105,11 +105,13 @@ function Region(props) {
         catch (ex) {
             alert(ex);
         }
+        setChargementModification(false);
     }
 
     async function supprimerRegion(){
         try{
             await regionService.delete(region.idRegion).then(() => {
+                setChargementSuppression(true);
                 let compteur = 0;
                 props.listeRegions.forEach(r =>{
                     if(r.idRegion === region.idRegion){
@@ -122,9 +124,10 @@ function Region(props) {
         catch(ex){
             alert(ex);
         }
+        setChargementSuppression(false);
     }
 
-    if(setChargementModification === true){
+    if(chargementModification === true){
         return (
             <tr >
                 <td>{region.nomRegion}</td>
@@ -133,7 +136,7 @@ function Region(props) {
             </tr>
         )
     }
-    else if(setChargementSuppression === true) {
+    else if(chargementSuppression === true) {
         return (
             <tr >
                 <td>{region.nomRegion}</td>
