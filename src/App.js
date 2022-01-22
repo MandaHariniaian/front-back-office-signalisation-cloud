@@ -6,11 +6,12 @@ import React, { useState } from "react";
 import { AppContext } from "./lib/contextLib";
 import Cookies from "js-cookie";
 import loginService from "./services/login.service";
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { ProtectedRoute } from './components/login/ProtectedRoute';
 
 export default function App() {
-
-  const [estAuthentifie, authentification] = useState(false);
-
+  
+const [estAuthentifie, authentification] = useState(false);
 
   const readCookie = async () =>{
     const data = {
@@ -37,11 +38,8 @@ export default function App() {
 
   return (
     <AppContext.Provider value={{ estAuthentifie, authentification }}>
-      {estAuthentifie ? (
-        <Accueil/>
-      ) : (
-        <Login />
-      )}
+      <Route exact path="/"  component={Login} />
+      <ProtectedRoute exact path="/accueil" component={Accueil}  />
     </AppContext.Provider>
   );
 }

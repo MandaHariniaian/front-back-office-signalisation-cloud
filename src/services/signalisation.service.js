@@ -13,8 +13,12 @@ class SignalisationService{
         return http.put("/api/signalisations/"+id, data);
     }
 
-    statGlobale(){
-        return http.get("/api/signalisations/stat-glob");
+    statParRegion(){
+        return http.get("/api/signalisations/stat-region");
+    }
+
+    statParType(){
+        return http.get("/api/signalisations/stat-type");
     }
 }
 

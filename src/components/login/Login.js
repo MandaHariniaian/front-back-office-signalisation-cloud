@@ -48,12 +48,14 @@ export default function Login() {
         else {
           setErreurMdp(true);
           setChargement(false);
+          authentification(false);
           //alert("Mot de passe erroné")
         }
       });
     } catch (ex) {
       console.log(ex);
       alert(ex.message);
+      authentification(false);
       setChargement(false);
     }
   }
@@ -81,13 +83,10 @@ export default function Login() {
               Mauvais mot de passe
             </Form.Control.Feedback>
           ) : (
-            <div>
-            </div>
+            <span>
+            </span>
           )
           }
-
-
-
           <div>
             <Button size="lg" type="submit" disabled={false} className="formComponent">
               {chargement
