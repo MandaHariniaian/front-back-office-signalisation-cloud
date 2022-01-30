@@ -20,6 +20,10 @@ class SignalisationService{
     statParType(){
         return http.get("/api/signalisations/stat-type");
     }
+
+    getImage(){
+        return http.get("api/signalisations/image");
+    }
 }
 
 

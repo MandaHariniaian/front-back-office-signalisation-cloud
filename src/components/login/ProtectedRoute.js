@@ -1,17 +1,18 @@
 import React from 'react';
 import { useAppContext } from '../../lib/contextLib';
-import  {Route, Redirect} from "react-router-dom";
+import  {Route, Navigate} from "react-router-dom";
 
-const {estAuthentifie, authentification} = useAppContext();
 
 export const ProtectedRoute = ({component: Component, ...rest}) => {
+    const {estAuthentifie, authentification} = useAppContext();
+    console.log("mandalo");
     return(
         <Route {...rest} render={
             props => {
                 if(estAuthentifie === true){
                     return <Component {...props} />
                 } else {
-                    return <Redirect to={
+                    return <Navigate to={
                         {
                             pathname: "/",
                             state: {
@@ -24,3 +25,4 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
         } />
     )
 }
+

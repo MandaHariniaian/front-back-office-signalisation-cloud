@@ -1,51 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Offcanvas, Placeholder, Form, Col, Row, Button} from 'react-bootstrap';
+import { Offcanvas, Placeholder, Form, Col, Row, Button, Accordion } from 'react-bootstrap';
 import regionService from '../../services/region.service';
 import signalisationService from '../../services/signalisation.service';
 import '../../styles/DetailSignalisation.css';
-
-/*export default class DetailSignalisation extends Component {
-    constructor(props) {
-        super(props);
-
-        useEffect(() => {
-            this.props.setAffichage(false);
-        }, []);
-    }
-
-
-    render() {
-        console.log(this.props);
-        return (
-            <>
-                <Offcanvas show={this.props.affichage} onHide={this.props.setAffichage(false)} placement="end" scroll={true}>
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title>
-                            Detail signalisation
-                        </Offcanvas.Title>
-                        <Placeholder as={Offcanvas.Title} animation="glow" >
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </Offcanvas.Header>
-                    <Placeholder as={Offcanvas.Body} animation="glow" >
-                        <Placeholder xs={12} />
-                        <br />
-                        <Placeholder xs={12} />
-                        <br />
-                        <Placeholder xs={12} />
-                        <br />
-                        <Placeholder xs={12} />
-                        <br />
-                        <Placeholder xs={12} />
-                    </Placeholder>
-
-                </Offcanvas>
-            </>
-        )
-    }
-
-}*/
-
 
 export default function DetailSignalisation(props) {
     const handleClose = () => props.setAffichage(false);
@@ -60,9 +17,9 @@ export default function DetailSignalisation(props) {
             });
     }, []);
 
-    async function validerAffecation(){
-        try{
-            const data={
+    async function validerAffecation() {
+        try {
+            const data = {
                 idSignalisation: props.signalisation.idSignalisation,
                 region: {
                     idRegion: idRegionSelectionne
@@ -71,10 +28,11 @@ export default function DetailSignalisation(props) {
             await signalisationService.update(props.signalisation.idSignalisation, data);
             alert("region affecté");
         }
-        catch(ex){
+        catch (ex) {
             alert(ex);
         }
     }
+
 
 
     if (props.signalisation === null || listeRegions === null) {
@@ -109,7 +67,35 @@ export default function DetailSignalisation(props) {
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <div className="description" >{props.signalisation.descriptionSignalisation}</div>
+                    <hr />
+                    <div className="description text-center" >
+                        <h3>Description</h3>
+                        <p>{props.signalisation.descriptionSignalisation}</p>
+                    </div>
+                    <hr />
+                    <div className="image_signalisation">
+                        {
+                            props.imageSignalisation.lenght === 0 ? (
+                                <>Aucune image</>
+                            ) : (
+                                <Accordion defaultActiveKey="1">
+                                    <Accordion.Item eventKey="0">
+                                        <Accordion.Header>Voir images</Accordion.Header>
+                                        <Accordion.Body>
+                                            <ul>
+                                                {
+                                                    props.imageSignalisation.map((image) => (
+                                                        <li key={image.idImageSignalisation}><img src={image.lienImageSignalisation} width="100" height="100" /></li>
+                                                    ))
+                                                }
+                                            </ul>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+
+                            )
+                        }
+                    </div>
                     <hr />
                     <div className="jumbotron">
                         <Form className="selectionRegion">
@@ -119,7 +105,7 @@ export default function DetailSignalisation(props) {
                                     <Form.Label className="label">Region a affecter</Form.Label>
                                     <Form.Select onChange={(e) => setIdRegionSelectionne(e.target.value)}>
                                         {
-                                            listeRegions.map((region) =>(
+                                            listeRegions.map((region) => (
                                                 <option key={region.idRegion} value={region.idRegion}>{region.nomRegion}</option>
                                             ))
                                         }

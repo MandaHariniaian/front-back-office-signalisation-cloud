@@ -104,17 +104,3 @@ export default function Login() {
     </Container>
   );
 }
-
-/**<ReCAPTCHA
-            //ref={}
-            sitekey="6Le2AP8dAAAAAN5HrUAO3As0TXjaX5lk2u3pMi3A"
-            onChange={verifierCaptcha}
-            className="formComponent"
-
-          /> */
-
-
-// recaptcha
-
-// clé du site :  6Le2AP8dAAAAAN5HrUAO3As0TXjaX5lk2u3pMi3A
-// clé secrète: 6Le2AP8dAAAAAPTxSgOJuQ7m0Li7ZFZSrts2cd28
