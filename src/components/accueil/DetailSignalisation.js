@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Offcanvas, Placeholder, Form, Col, Row, Accordion } from 'react-bootstrap';
 import regionService from '../../services/region.service';
 import signalisationService from '../../services/signalisation.service';
 import '../../styles/DetailSignalisation.css';
 import mapboxgl from 'mapbox-gl';
-
 
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -130,6 +130,7 @@ export default function DetailSignalisation(props) {
     }, [props.signalisation]);
 
     async function validerAffectation() {
+
         try {
             const data = {
                 idSignalisation: props.signalisation.idSignalisation,
@@ -145,6 +146,7 @@ export default function DetailSignalisation(props) {
             alert(ex);
         }
     }
+
 
 
     if (props.signalisation === null || listeRegions === null) {
@@ -180,7 +182,35 @@ export default function DetailSignalisation(props) {
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <div className="description" >{props.signalisation.descriptionSignalisation}</div>
+                    <hr />
+                    <div className="description text-center" >
+                        <h3>Description</h3>
+                        <p>{props.signalisation.descriptionSignalisation}</p>
+                    </div>
+                    <hr />
+                    <div className="image_signalisation">
+                        {
+                            props.imageSignalisation.lenght === 0 ? (
+                                <>Aucune image</>
+                            ) : (
+                                <Accordion defaultActiveKey="1">
+                                    <Accordion.Item eventKey="0">
+                                        <Accordion.Header>Voir images</Accordion.Header>
+                                        <Accordion.Body>
+                                            <ul>
+                                                {
+                                                    props.imageSignalisation.map((image) => (
+                                                        <li key={image.idImageSignalisation}><img src={image.lienImageSignalisation} width="100" height="100" /></li>
+                                                    ))
+                                                }
+                                            </ul>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+
+                            )
+                        }
+                    </div>
                     <hr />
                     <div className="" >
                         <Accordion>

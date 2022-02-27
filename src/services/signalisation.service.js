@@ -23,6 +23,7 @@ class SignalisationService{
 
     getImageSignalisation(idSignalisation){
         return http.get("/api/imageSignalisations/getImage/" + idSignalisation);
+
     }
 }
 

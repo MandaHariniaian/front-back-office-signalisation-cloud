@@ -9,6 +9,7 @@ import signalisationService from '../../services/signalisation.service';
 export default function AffectationSignalisation() {
     const [affichageDetail, setAffichageDetail] = useState(false);
     const [signalisation, setSignalisation] = useState(null);
+    const [imageSignalisation, setImageSignalisation] = useState([]);
 
     return (
         <Container className="content">
@@ -22,9 +23,9 @@ export default function AffectationSignalisation() {
             <br />
             <hr />
             <Row>
-                <ListeSignalisation affichageDetail={affichageDetail} setAffichageDetail={setAffichageDetail} setSignalisation={setSignalisation} />
+                <ListeSignalisation affichageDetail={affichageDetail} setAffichageDetail={setAffichageDetail} setSignalisation={setSignalisation} setImageSignalisation={setImageSignalisation} />
             </Row>
-            <DetailSignalisation signalisation={signalisation} affichage={affichageDetail} setAffichage={setAffichageDetail} />
+            <DetailSignalisation signalisation={signalisation} imageSignalisation={imageSignalisation} affichage={affichageDetail} setAffichage={setAffichageDetail} />
         </Container>
     )
 }
@@ -79,7 +80,7 @@ class ListeSignalisation extends Component {
                 <tbody>
                     {
                         this.state.listeSign.map((data) =>(
-                            <Signalisation key={data.idSignalisation} setSignalisation={this.props.setSignalisation} setAffichageDetail={this.props.setAffichageDetail}  signalisation={data}  />
+                            <Signalisation key={data.idSignalisation} setSignalisation={this.props.setSignalisation} setAffichageDetail={this.props.setAffichageDetail}  signalisation={data} setImageSignalisation={this.props.setImageSignalisation} />
                         ))
                     }
                 </tbody>
