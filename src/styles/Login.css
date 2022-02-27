@@ -1,6 +1,9 @@
 .login{
-    margin-top: 20vh;
+    margin-top: 10vh;
+    padding-top: 2vh;
     background-color: #eee;
+    border-radius: 20px;
+    transform: scale(1.2);
 }
 
 .messageErreur{
@@ -28,11 +31,18 @@
     margin-top: 5vh;
 }
 
-button{
+.boutton{
     width: 100%;
+    margin-bottom: 5vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
 }
 
 label{
     text-align: center;
     font-size: x-large;
+}
+
+.messageErreur{
+    color :red;
 }

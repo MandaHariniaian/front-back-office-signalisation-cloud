@@ -6,14 +6,15 @@ import React, { useState } from "react";
 import { AppContext } from "./lib/contextLib";
 import Cookies from "js-cookie";
 import loginService from "./services/login.service";
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import { ProtectedRoute } from './components/login/ProtectedRoute';
+import {Spinner} from "react-bootstrap";
 
 export default function App() {
-  
-const [estAuthentifie, authentification] = useState(false);
 
-  const readCookie = async () =>{
+  const [estAuthentifie, authentification] = useState(false);
+  const [chargement, setChargement ] = useState(true);
+
+
+  const readCookie = async () => {
     const data = {
       'user': Cookies.get("user")
     }
@@ -21,27 +22,38 @@ const [estAuthentifie, authentification] = useState(false);
       await loginService.verifierCookie(data).then(response => {
         if (response.data === true) {
           authentification(true);
-          Cookies.set("user", Cookies.get("user"), {expires: 1});
+          Cookies.set("user", Cookies.get("user"), { expires: 1 });
         }
         else {
-            authentification(false);
+          authentification(false);
         }
       });
     } catch (ex) {
       authentification(false);
       //alert(ex.message);
     }
+    setChargement(false);
   }
-  React.useEffect(() =>{
+  React.useEffect(() => {
     readCookie();
   }, [])
 
+  if(chargement === true){
+    return (
+      <div className='spinnerChargementLogin'><Spinner animation="border"  /></div>
+    )
+  }
+
   return (
     <AppContext.Provider value={{ estAuthentifie, authentification }}>
-      <Route exact path="/"  component={Login} />
-      <ProtectedRoute exact path="/accueil" component={Accueil}  />
+        {estAuthentifie ? (
+          <Accueil />
+        ) : (
+          <Login />
+        )}
     </AppContext.Provider>
   );
+  
 }
 
 

@@ -7,39 +7,6 @@ import { Link, Route, Routes } from "react-router-dom";
 
 export default function Statistique() {
 
-    const options = {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light2", //"light1", "dark1", "dark2"
-        title: {
-            text: "Simple Column Chart with Index Labels"
-        },
-        axisY: {
-            includeZero: true
-        },
-        data: [{
-            type: "column", //change type to bar, line, area, pie, etc
-            //indexLabel: "{y}", //Shows y value on all Data Points
-            indexLabelFontColor: "#5A5757",
-            indexLabelPlacement: "outside",
-            dataPoints: [
-                { x: 10, y: 71 },
-                { x: 20, y: 55 },
-                { x: 30, y: 50 },
-                { x: 40, y: 65 },
-                { x: 50, y: 71 },
-                { x: 60, y: 68 },
-                { x: 70, y: 38 },
-                { x: 80, y: 92, indexLabel: "Highest" },
-                { x: 90, y: 54 },
-                { x: 100, y: 60 },
-                { x: 110, y: 21 },
-                { x: 120, y: 49 },
-                { x: 130, y: 36 }
-            ]
-        }]
-    }
-
 
     return (
         <Container className="jumbotron">
@@ -55,10 +22,10 @@ export default function Statistique() {
                             <Navbar.Collapse id="basic-navbar-nav">
                                 <Nav className="me-auto">
                                     <Link to={"/statistique/stat-region"} className="nav-link">
-                                        Statistique de signalisation par region
+                                        Signalisation par region
                                     </Link>
                                     <Link to={"/statistique/stat-type"} className="nav-link">
-                                        Statistique de signalisation par type
+                                        Signalisation par type
                                     </Link>
                                 </Nav>
                             </Navbar.Collapse><Navbar.Toggle />
@@ -67,7 +34,7 @@ export default function Statistique() {
                     <div className="content container">
                         <Routes>
                             <Route exact path="/stat-region" element={<StatParRegion />} />
-                            <Route exact path="/stat-type" element={<StatParRegion />} />
+                            <Route exact path="/stat-type" element={<StatParType />} />
                         </Routes>
                     </div>
                 </div >
@@ -137,9 +104,14 @@ function StatParRegion() {
     )
 
 }
-/*
+
 function StatParType() {
     const [data, setData] = useState([]);
+
+    
+    useEffect(() => {
+        getData();
+    }, []);
 
     async function getData() {
         const d = await signalisationService.statParRegion();
@@ -186,4 +158,4 @@ function StatParType() {
             <CanvasJSChart options={data} />
         </>
     )
-}*/
+}

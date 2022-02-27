@@ -1,26 +1,16 @@
-import React from 'react';
-import { useAppContext } from '../../lib/contextLib';
-import  {Route, Redirect} from "react-router-dom";
+import React from "react";
+import { useAppContext } from "../../lib/contextLib";
+import { Navigate, Outlet, Route } from "react-router-dom";
+import Accueil from "../accueil/Accueil";
+import Login from "./Login";
 
-const {estAuthentifie, authentification} = useAppContext();
 
-export const ProtectedRoute = ({component: Component, ...rest}) => {
-    return(
-        <Route {...rest} render={
-            props => {
-                if(estAuthentifie === true){
-                    return <Component {...props} />
-                } else {
-                    return <Redirect to={
-                        {
-                            pathname: "/",
-                            state: {
-                                from: props.location
-                            }
-                        }
-                    } />
-                }
-            }
-        } />
-    )
+
+const ProtectedRoute = () => {
+    const {  estAuthentifie , authentification } = useAppContext();
+
+    return estAuthentifie ? <Outlet /> : <Login/>
+
 }
+
+export default ProtectedRoute;
