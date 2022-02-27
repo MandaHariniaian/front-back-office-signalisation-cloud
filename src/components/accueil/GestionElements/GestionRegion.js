@@ -23,7 +23,9 @@ export default function GestionRegion() {
     function getListeRegion() {
         regionService.selectAll()
             .then(response => {
-                setListeRegions(response.data);
+                if(response.data.length > 0){
+                    setListeRegions(response.data);
+                }
             });
     }
 

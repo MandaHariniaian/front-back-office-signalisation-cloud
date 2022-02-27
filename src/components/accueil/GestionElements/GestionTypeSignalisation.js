@@ -24,7 +24,9 @@ export default function GestionTypeSignalisation() {
     function getListeTypSign() {
         typeSignalisationService.selectAll()
             .then(response => {
-                setListeTypeSignalisations(response.data);
+                if (response.data.length > 0) {
+                    setListeTypeSignalisations(response.data);
+                }
             });
     }
 
@@ -77,7 +79,7 @@ function ListeTypeSignalisation(props) {
             <tbody>
                 {
                     props.listeTypeSignalisations.map((typeSign) => (
-                        <TypeSignalisation key={typeSign.idTypeSignalisation} typeSignalisation={typeSign} getListeTypSign={props.getListeTypSign}  setListeTypeSignalisations={props.setlisteTypeSignalisations} listeTypeSignalisations={props.listeTypeSignalisations} />
+                        <TypeSignalisation key={typeSign.idTypeSignalisation} typeSignalisation={typeSign} getListeTypSign={props.getListeTypSign} setListeTypeSignalisations={props.setlisteTypeSignalisations} listeTypeSignalisations={props.listeTypeSignalisations} />
                     ))
                 }
             </tbody>
@@ -138,22 +140,22 @@ function TypeSignalisation(props) {
         setChargementSuppression(false);
     }
 
-    if(chargementModification){
-        return(
+    if (chargementModification) {
+        return (
             <tr >
-            <td>{typeSignalisation.typeSignalisation}</td>
-            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border"  /></>} disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
-            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
-        </tr>
+                <td>{typeSignalisation.typeSignalisation}</td>
+                <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border" /></>} disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+                <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+            </tr>
         )
     }
-    else if(chargementSuppression){
-        return(
+    else if (chargementSuppression) {
+        return (
             <tr >
-            <td>{typeSignalisation.typeSignalisation}</td>
-            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value="modifier" disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
-            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
-        </tr>
+                <td>{typeSignalisation.typeSignalisation}</td>
+                <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value="modifier" disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+                <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+            </tr>
         )
     }
     return (
