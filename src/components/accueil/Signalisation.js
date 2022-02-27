@@ -25,7 +25,11 @@ export default function Signalisation(props) {
             <td>{props.signalisation.typeSignalisations.map((typeSignalisation, key) =>(
                 <span key={key}>{typeSignalisation.typeSignalisation}, </span>
             ))}</td>
-            <td>{props.signalisation.coordonnees}</td>
+            <td>
+                Long : {props.signalisation.coordonneeX}
+                <br />
+                Lat : {props.signalisation.coordonneeY}
+            </td>
             <td>{props.signalisation.dateSignalisation}</td>
             <td>
                 <Button onClick={() => {

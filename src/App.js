@@ -6,12 +6,15 @@ import React, { useState } from "react";
 import { AppContext } from "./lib/contextLib";
 import Cookies from "js-cookie";
 import loginService from "./services/login.service";
+import {Spinner} from "react-bootstrap";
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/login/ProtectedRoute';
 
 export default function App() {
 
   const [estAuthentifie, authentification] = useState(false);
+  const [chargement, setChargement ] = useState(true);
+
 
   const readCookie = async () => {
     const data = {
@@ -31,32 +34,28 @@ export default function App() {
       authentification(false);
       //alert(ex.message);
     }
+    setChargement(false);
   }
   React.useEffect(() => {
     readCookie();
   }, [])
 
-  /*return (
-    <AppContext.Provider value={{ estAuthentifie, authentification }}>
-      <Routes>
-        <Route exact path="/" component={Login} />
-        <Route exact path="/accueil" component={Accueil} />
-      </Routes>
-    </AppContext.Provider>
-  );*/
-
-  if (estAuthentifie) {
+  if(chargement === true){
     return (
-      <AppContext.Provider value={{ estAuthentifie, authentification }}>
-        <Accueil />
-      </AppContext.Provider>
+      <div className='spinnerChargementLogin'><Spinner animation="border"  /></div>
     )
   }
+
   return (
     <AppContext.Provider value={{ estAuthentifie, authentification }}>
-      <Login />
+        {estAuthentifie ? (
+          <Accueil />
+        ) : (
+          <Login />
+        )}
     </AppContext.Provider>
-  )
+  );
+  
 }
 
 

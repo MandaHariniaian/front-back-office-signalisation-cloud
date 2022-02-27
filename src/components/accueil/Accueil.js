@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import Cookies from "js-cookie";
 import '../../styles/Accueil.css';
+import Presentation from "./Presentation";
 
 export default function Accueil() {
 
@@ -26,14 +27,11 @@ export default function Accueil() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Link to={"/"} className="nav-link">
-                                Accueil
+                            <Link to={"/affectation_signalisation"} className="nav-link">
+                                Affectation de signalisation
                             </Link>
                             <Link to={"/statistique"} className="nav-link">
                                 Statistique
-                            </Link>
-                            <Link to={"/affectation_signalisation"} className="nav-link">
-                                Affectation de signalisation
                             </Link>
                             <Link to={"/gestion_element_necessaire/gestionRegion"} className="nav-link">
                                 Gestion des elements necessaires
@@ -49,7 +47,7 @@ export default function Accueil() {
             </Navbar>
             <div className="content container">
                 <Routes>
-                    <Route exact path="/" element={<AffectationSignalisation />} />
+                    <Route exact path="/" element={<Presentation />} />
                     <Route exact path="/statistique/*" element={<Statistique />} />
                     <Route exact path="/affectation_signalisation" element={<AffectationSignalisation />} />
                     <Route exact path="/gestion_element_necessaire/*" element={<GestionElmNecessaire />} />

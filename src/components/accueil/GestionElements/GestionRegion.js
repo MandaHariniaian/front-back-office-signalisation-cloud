@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Row, Table, Button, Spinner } from 'react-bootstrap';
+import { Form, Row, Table, Spinner, Button } from 'react-bootstrap';
 import '../../../styles/GestionRegion.css';
 import regionService from '../../../services/region.service';
+
+import Avatar from '@mui/material/Avatar';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 export default function GestionRegion() {
 
@@ -14,7 +23,9 @@ export default function GestionRegion() {
     function getListeRegion() {
         regionService.selectAll()
             .then(response => {
-                setListeRegions(response.data);
+                if(response.data.length > 0){
+                    setListeRegions(response.data);
+                }
             });
     }
 
@@ -22,10 +33,10 @@ export default function GestionRegion() {
         <div className='jumbotron'>
             <Row>
                 <div className="col-3">
-                    <AjoutRegion listeRegions={listeRegions} setListeRegions={setListeRegions} className="form_ajout_region" />
+                    <AjoutRegion listeRegions={listeRegions} setListeRegions={setListeRegions} getListeRegion={getListeRegion}  className="form_ajout_region" />
                 </div>
                 <div className="col-9">
-                    <ListeRegions className="liste_regions" listeRegions={listeRegions} setListeRegions={setListeRegions} />
+                    <ListeRegions className="liste_regions" listeRegions={listeRegions} setListeRegions={setListeRegions} getListeRegion={getListeRegion} />
                 </div>
             </Row>
         </div>
@@ -67,7 +78,7 @@ function ListeRegions(props) {
             <tbody>
                 {
                     props.listeRegions.map((region) => (
-                        <Region key={region.idRegion} region={region} setListeRegions={props.setListeRegions} listeRegions={props.listeRegions} />
+                        <Region key={region.idRegion} region={region} setListeRegions={props.setListeRegions} listeRegions={props.listeRegions} getListeRegion={props.getListeRegion} />
                     ))
                 }
             </tbody>
@@ -84,7 +95,7 @@ function Region(props) {
 
     async function modifierRegion() {
         try {
-            if(nomRegion === ''){
+            if (nomRegion === '') {
                 throw new Error("Veuillez inserer une valeur dans le champ");
             }
             const data = {
@@ -92,7 +103,7 @@ function Region(props) {
                 nomRegion: nomRegion
             }
             await regionService.update(props.region.idRegion, data)
-            .then(response => {
+                .then(response => {
                     setChargementModification(true);
                     props.listeRegions.map(r => {
                         if (region.idRegion === r.idRegion) {
@@ -108,35 +119,36 @@ function Region(props) {
         setChargementModification(false);
     }
 
-    async function supprimerRegion(){
-        try{
+    async function supprimerRegion() {
+        try {
             await regionService.delete(region.idRegion).then(() => {
                 setChargementSuppression(true);
                 let compteur = 0;
-                props.listeRegions.forEach(r =>{
-                    if(r.idRegion === region.idRegion){
+                props.listeRegions.forEach(r => {
+                    if (r.idRegion === region.idRegion) {
                         props.listeRegions.splice(compteur, 1);
                     }
-                    compteur ++;
+                    compteur++;
+                    props.getListeRegion();
                 });
             });
         }
-        catch(ex){
+        catch (ex) {
             alert(ex);
         }
         setChargementSuppression(false);
     }
 
-    if(chargementModification === true){
+    if (chargementModification === true) {
         return (
             <tr >
                 <td>{region.nomRegion}</td>
-                <td><input type="text" value={nomRegion} onChange={(e) => setNomRegion(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border"  /></>} className="btn btn-warning btn-modification" disabled={true} /> </td>
+                <td><input type="text" value={nomRegion} onChange={(e) => setNomRegion(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border" /></>} className="btn btn-warning btn-modification" disabled={true} /> </td>
                 <td><Button variant="danger" onClick={supprimerRegion} disabled={true} >Supprimer</Button></td>
             </tr>
         )
     }
-    else if(chargementSuppression === true) {
+    else if (chargementSuppression === true) {
         return (
             <tr >
                 <td>{region.nomRegion}</td>
@@ -155,6 +167,9 @@ function Region(props) {
 
 }
 
+
+const theme = createTheme();
+
 function AjoutRegion(props) {
 
     const [nomRegionAjout, setNomRegionAjout] = useState('');
@@ -162,20 +177,20 @@ function AjoutRegion(props) {
     async function ajouterRegion(e) {
         e.preventDefault();
         try {
-            if(nomRegionAjout === ''){
+            if (nomRegionAjout === '') {
                 throw new Error("Veuillez inserer une valeur dans le champ");
             }
             const data = {
                 nomRegion: nomRegionAjout
             }
             await regionService.insert(data)
-                .then(response =>{
+                .then(response => {
                     props.listeRegions.push({
                         idRegion: response.data.idRegion,
                         nomRegion: response.data.nomRegion
                     });
                     setNomRegionAjout('');
-                    alert("Region ajouté");
+                    props.getListeRegion();
                     //regionService.selectAll().then(response => props.setListeRegions(response.data));
                 });
         }
@@ -186,19 +201,34 @@ function AjoutRegion(props) {
 
     return (
         <div className='form_ajout_region'>
-            <div className="text-center "><h4>Ajout de region</h4></div>
-            <Form onSubmit={ajouterRegion} >
-                <Form.Label className="col-12">Nom de region</Form.Label>
-                <Form.Control
-                    className=" nom_region_ajout"
-                    type="text"
-                    value={nomRegionAjout}
-                    onChange={(e) => setNomRegionAjout(e.target.value)}
-                />
-                <Button type="submit" >
-                    Ajouter
-                </Button>
-            </Form>
+            <ThemeProvider theme={theme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <AddBoxIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Ajouter une region
+                        </Typography>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                            <TextField margin="normal" required fullWidth id="nomRegion" label="Nom de region" name="email" autoComplete="email"
+                                autoFocus value={nomRegionAjout} onChange={(e) => setNomRegionAjout(e.target.value)}
+                            />
+                            <Button type="submit" className='bouttonAjoutRegion' onClick={ajouterRegion} >
+                                Ajouter
+                            </Button>
+                        </Box>
+                    </Box>
+                </Container>
+            </ThemeProvider >
         </div>
     )
 }

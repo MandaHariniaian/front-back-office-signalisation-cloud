@@ -3,6 +3,16 @@ import { Form, Row, Table, Button, Spinner } from 'react-bootstrap';
 import '../../../styles/GestionRegion.css';
 import typeSignalisationService from '../../../services/typeSignalisation.service';
 
+
+import Avatar from '@mui/material/Avatar';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 export default function GestionTypeSignalisation() {
 
     const [listeTypeSignalisations, setListeTypeSignalisations] = useState([]);
@@ -14,7 +24,9 @@ export default function GestionTypeSignalisation() {
     function getListeTypSign() {
         typeSignalisationService.selectAll()
             .then(response => {
-                setListeTypeSignalisations(response.data);
+                if (response.data.length > 0) {
+                    setListeTypeSignalisations(response.data);
+                }
             });
     }
 
@@ -25,7 +37,7 @@ export default function GestionTypeSignalisation() {
                     <AjoutTypeSignalisation listeTypeSignalisations={listeTypeSignalisations} setListeTypeSignalisations={setListeTypeSignalisations} className="form_ajout_type_sign" />
                 </div>
                 <div className="col-9">
-                    <ListeTypeSignalisation className="liste_signalisation" listeTypeSignalisations={listeTypeSignalisations} setListeTypeSignalisations={setListeTypeSignalisations} />
+                    <ListeTypeSignalisation className="liste_signalisation" listeTypeSignalisations={listeTypeSignalisations} getListeTypSign={getListeTypSign} setListeTypeSignalisations={setListeTypeSignalisations} />
                 </div>
             </Row>
         </div>
@@ -67,7 +79,7 @@ function ListeTypeSignalisation(props) {
             <tbody>
                 {
                     props.listeTypeSignalisations.map((typeSign) => (
-                        <TypeSignalisation key={typeSign.idTypeSignalisation} typeSignalisation={typeSign} setListeTypeSignalisations={props.setlisteTypeSignalisations} listeTypeSignalisations={props.listeTypeSignalisations} />
+                        <TypeSignalisation key={typeSign.idTypeSignalisation} typeSignalisation={typeSign} getListeTypSign={props.getListeTypSign} setListeTypeSignalisations={props.setlisteTypeSignalisations} listeTypeSignalisations={props.listeTypeSignalisations} />
                     ))
                 }
             </tbody>
@@ -116,10 +128,7 @@ function TypeSignalisation(props) {
                 props.listeTypeSignalisations.forEach(s => {
                     if (s.idTypeSignalisation === typeSignalisation.idTypeSignalisation) {
                         props.listeTypeSignalisations.splice(compteur, 1);
-                        typeSignalisationService.selectAll()
-                            .then(response => {
-                                props.setListeTypeSignalisations(response.data);
-                            });
+                        props.getListeTypSign();
                     }
                     compteur++;
                 });
@@ -131,22 +140,22 @@ function TypeSignalisation(props) {
         setChargementSuppression(false);
     }
 
-    if(chargementModification){
-        return(
+    if (chargementModification) {
+        return (
             <tr >
-            <td>{typeSignalisation.typeSignalisation}</td>
-            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border"  /></>} disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
-            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
-        </tr>
+                <td>{typeSignalisation.typeSignalisation}</td>
+                <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value={<>Modification <Spinner animation="border" /></>} disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+                <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+            </tr>
         )
     }
-    else if(chargementSuppression){
-        return(
+    else if (chargementSuppression) {
+        return (
             <tr >
-            <td>{typeSignalisation.typeSignalisation}</td>
-            <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value="modifier" disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
-            <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
-        </tr>
+                <td>{typeSignalisation.typeSignalisation}</td>
+                <td><input type="text" value={nomTypeSignalisation} onChange={(e) => setTypeSignalisation(e.target.value)} /><input type="button" value="modifier" disabled={true} className="btn btn-warning btn-modification" onClick={(e) => modifierTypeSignalisation()} /> </td>
+                <td><Button variant="danger" onClick={supprimerTypeSignalisation} >Supprimer</Button></td>
+            </tr>
         )
     }
     return (
@@ -158,6 +167,9 @@ function TypeSignalisation(props) {
     )
 
 }
+
+
+const theme = createTheme();
 
 function AjoutTypeSignalisation(props) {
 
@@ -183,7 +195,6 @@ function AjoutTypeSignalisation(props) {
                             props.setListeTypeSignalisations(response.data);
                         });
                     setTypeSignalisationAjout('');
-                    alert("Element ajouté");
                 });
         }
         catch (ex) {
@@ -193,19 +204,34 @@ function AjoutTypeSignalisation(props) {
 
     return (
         <>
-            <div className="text-center"><h4>Ajout de type de signalisation</h4></div>
-            <Form onSubmit={ajouterTypeSignalisation} >
-                <Form.Label className="col-12">Nom de type de signalisation</Form.Label>
-                <Form.Control
-                    className=" nom_region_ajout"
-                    type="text"
-                    value={typeSignalisationAjout}
-                    onChange={(e) => setTypeSignalisationAjout(e.target.value)}
-                />
-                <Button type="submit" >
-                    Ajouter
-                </Button>
-            </Form>
+            <ThemeProvider theme={theme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <AddBoxIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Ajoute un nouvel type
+                        </Typography>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                            <TextField margin="normal" required fullWidth id="nomRegion" label="Type" name="email" autoComplete="email"
+                                autoFocus value={typeSignalisationAjout} onChange={(e) => setTypeSignalisationAjout(e.target.value)}
+                            />
+                            <Button type="submit" className='bouttonAjoutRegion' onClick={ajouterTypeSignalisation} >
+                                Ajouter
+                            </Button>
+                        </Box>
+                    </Box>
+                </Container>
+            </ThemeProvider >
         </>
     )
 }
